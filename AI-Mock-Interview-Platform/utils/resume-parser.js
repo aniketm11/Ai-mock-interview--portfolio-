@@ -1,0 +1,1 @@
+import pdf from 'pdf-parse'; export async function parseResume(file){if(!file)return '';if(file.mimetype==='application/pdf')return (await pdf(file.buffer)).text.slice(0,30000);if(file.mimetype==='text/plain')return file.buffer.toString('utf8').slice(0,30000);throw Object.assign(new Error('Resume must be PDF or TXT'),{status:400})}
