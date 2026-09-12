@@ -1,6 +1,19 @@
 # API Reference
 
-Base URL: `http://localhost:3000/api`
+Local base URL: `http://localhost:3000/api`
+
+Production base URL: `https://your-project.vercel.app/api`
+
+## Health
+
+### Health check
+`GET /health`
+
+Returns a public deployment health response:
+
+```json
+{"ok":true,"service":"ai-mock-interview-platform"}
+```
 
 ## Authentication
 
@@ -30,7 +43,7 @@ Multipart form fields:
 - `level`: `junior`, `mid`, or `senior`
 - `skills`
 - `jobDescription`
-- `resume`: optional PDF/TXT file
+- `resume`: optional PDF/TXT file, maximum 4 MB
 
 ### List interview history
 `GET /interviews`
