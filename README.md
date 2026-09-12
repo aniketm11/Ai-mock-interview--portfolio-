@@ -88,7 +88,7 @@ Open `http://localhost:3000`.
 
 ## Deploy to Vercel
 
-This repository is prepared to deploy with the **`AI-Mock-Interview-Platform` directory as the Vercel Root Directory**. Vercel supports Express applications and Node.js Functions, and a subdirectory can be selected as the Root Directory for a project. citeturn0search0turn0search14
+This repository is prepared to deploy with the **`AI-Mock-Interview-Platform` directory as the Vercel Root Directory**.
 
 ### 1. Import GitHub repository
 
@@ -102,12 +102,12 @@ In Vercel:
 AI-Mock-Interview-Platform
 ```
 
-4. Keep the framework as the detected Node/Express application.
-5. Deploy after adding the environment variables below.
+4. Keep the detected Node/Express configuration.
+5. Add the environment variables below before deploying.
 
 ### 2. Add Vercel environment variables
 
-Add these under **Project Settings → Environment Variables**:
+Under **Project Settings → Environment Variables**, add:
 
 ```text
 NODE_ENV=production
@@ -147,7 +147,7 @@ Expected response:
 {"ok":true,"service":"ai-mock-interview-platform"}
 ```
 
-Vercel Functions support configurable execution duration; this project sets the API function to 120 seconds for AI/database work. citeturn1search0
+The API function is configured for a 120-second maximum duration to allow time for AI and database operations.
 
 ## Important production notes
 
@@ -155,7 +155,7 @@ Vercel Functions support configurable execution duration; this project sets the 
 - Use a strong random `JWT_SECRET`.
 - Use HTTPS in production; Vercel provides HTTPS automatically.
 - Browser microphone/camera permissions require a secure context.
-- Resume uploads are held in memory and are limited to 4 MB to stay conservative for serverless request handling.
+- Resume uploads are held in memory and are limited to 4 MB.
 - The PDF report is generated dynamically; no persistent local filesystem is required.
 - AI interview scores are practice guidance, not hiring decisions.
 
