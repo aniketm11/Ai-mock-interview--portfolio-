@@ -6,14 +6,19 @@ Production base URL: `https://your-project.vercel.app/api`
 
 ## Health
 
-### Health check
+### Application health
 `GET /health`
 
-Returns a public deployment health response:
+Returns the public runtime health response. It does not require database access.
 
 ```json
-{"ok":true,"service":"ai-mock-interview-platform"}
+{"ok":true,"service":"ai-mock-interview-platform","runtime":"v24.x"}
 ```
+
+### Database readiness
+`GET /health/db`
+
+Checks the database connection and verifies that all five required tables exist. It returns `503` when the database is unavailable or the schema is incomplete.
 
 ## Authentication
 
@@ -23,6 +28,8 @@ Returns a public deployment health response:
 ```json
 {"email":"user@example.com","password":"strong-password"}
 ```
+
+Password must be 10–200 characters.
 
 ### Login
 `POST /auth/login`
@@ -65,6 +72,8 @@ Multipart form fields:
   }
 }
 ```
+
+Answers are idempotent per question. After all six questions are answered, the interview is marked complete and its overall score is stored.
 
 ### Record integrity event
 `POST /interviews/:id/integrity-events`
