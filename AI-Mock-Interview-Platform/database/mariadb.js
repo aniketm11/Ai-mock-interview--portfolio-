@@ -1,10 +1,8 @@
 import mariadb from 'mariadb';
 import env from '../config/env.js';
 
-// Vercel can store multiline secrets either as real newlines or as the
-// two-character sequence \\n. Normalize both forms before passing the CA to
-// the MariaDB driver.
-const ca = env.MARIADB_SSL_CA?.replace(/\\\\n/g, '\n').trim();
+// Normalize CA values entered with literal escaped newlines.
+const ca = env.MARIADB_SSL_CA?.replace(/\\n/g, '\n').trim();
 const ssl = ca
   ? { ca, rejectUnauthorized: true }
   : { rejectUnauthorized: true };
