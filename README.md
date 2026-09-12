@@ -1,63 +1,71 @@
 # AI Mock Interview Platform
 
-A full-stack AI-powered mock interview platform designed to simulate a real technical interview with secure authentication, resume parsing, AI-generated questions, voice answers, interview integrity monitoring, scoring, and downloadable PDF reports.
+A full-stack AI-powered mock interview platform for role-specific interview practice, voice answers, adaptive AI evaluation, integrity signals, interview history and professional PDF reports.
+
+## Stack
+
+- Frontend: semantic HTML, CSS, browser speech/media APIs
+- Backend: Node.js 24 + Express
+- AI: OpenAI Responses API
+- Database: MariaDB
+- Auth: bcrypt + JWT HTTP-only cookies
+- Deployment: Vercel serverless Node.js function
 
 ## Features
 
-- Secure email/password authentication with JWT cookies
-- AI-generated interview questions based on role, level, skills, job description, and resume
-- Voice-first interview experience using browser speech recognition
-- Optional camera and microphone monitoring during interviews
+- Secure registration/login
+- AI-generated six-question interviews based on role, level, skills, job description and resume
+- Voice-first interview experience
+- Camera/microphone status monitoring
 - Interview integrity event tracking
-- AI evaluation for technical quality, communication, confidence, and grammar
-- Interview history and score tracking
-- Professional PDF interview reports
-- MariaDB persistence
-- Security middleware with Helmet, CORS, rate limiting, validation, and password hashing
+- Technical, communication, confidence and grammar scoring
+- Interview history
+- Downloadable PDF report
+- Responsive premium blue/white SaaS frontend
+- Production Vercel entrypoint with `/api/health`
 
 ## Architecture
 
 ```text
 Browser
   |
-  v
-Express API + Static Frontend
+  +--> Vercel static frontend
   |
-  +--> Authentication / JWT
-  +--> Interview Service
-  +--> OpenAI Interview Engine
-  +--> Resume Parser
-  +--> Integrity Monitoring
-  +--> MariaDB
-  +--> PDF Report Generator
+  +--> /api/* -> Express serverless function
+                    |
+                    +--> OpenAI
+                    +--> MariaDB
+                    +--> PDF generation
 ```
 
 ## Project Structure
 
 ```text
 AI-Mock-Interview-Platform/
-├── ai/                 # AI interview/question/evaluation engine
-├── backend/            # Express server and API routes
-├── config/             # Environment configuration
+├── ai/                 # OpenAI question/evaluation engine
+├── api/                # Vercel serverless entrypoint
+├── backend/            # Express app + local server
+├── config/             # Environment validation
 ├── database/           # MariaDB connection and schema
-├── docs/               # Architecture and setup documentation
-├── frontend/           # Browser application and interview monitoring
-├── middleware/         # Authentication and security middleware
+├── docs/               # API documentation
+├── frontend/           # CSS and browser application
+├── middleware/         # Authentication/security
 ├── models/             # Database repositories
-├── public/              # Main HTML entry point
-├── services/            # Authentication, interview and report services
-├── utils/               # Resume parsing utilities
+├── public/             # Landing page
+├── services/           # Auth/interview/report services
+├── utils/              # Resume parser
+├── vercel.json         # Vercel runtime configuration
 ├── .env.example
 └── package.json
 ```
 
 ## Requirements
 
-- Node.js 20+
+- Node.js 24.x
 - npm 10+
-- MariaDB 10.6+ or MySQL-compatible server
+- MariaDB 10.6+ or a compatible managed MariaDB/MySQL service
 - OpenAI API key
-- Modern Chromium-based browser for speech recognition and media features
+- Chrome or Edge for speech recognition and media features
 
 ## Local Setup
 
@@ -67,54 +75,98 @@ npm install
 cp .env.example .env
 ```
 
-Create the database and application user, then run `database/schema.sql` against the selected database.
+Create the database and application user, then run `database/schema.sql`.
 
-Fill `.env` with real local values. Never commit `.env` or API credentials.
-
-Start in development mode:
+Set the values in `.env`, then:
 
 ```bash
+npm run check
 npm run dev
 ```
 
 Open `http://localhost:3000`.
 
-For a production-style start:
+## Deploy to Vercel
 
-```bash
-npm run check
-npm start
+This repository is prepared to deploy with the **`AI-Mock-Interview-Platform` directory as the Vercel Root Directory**. Vercel supports Express applications and Node.js Functions, and a subdirectory can be selected as the Root Directory for a project. citeturn0search0turn0search14
+
+### 1. Import GitHub repository
+
+In Vercel:
+
+1. Add New Project.
+2. Import `aniketm11/Ai-mock-interview--portfolio-`.
+3. Set **Root Directory** to:
+
+```text
+AI-Mock-Interview-Platform
 ```
 
-## Environment Variables
+4. Keep the framework as the detected Node/Express application.
+5. Deploy after adding the environment variables below.
 
-See `.env.example` for all required variables:
+### 2. Add Vercel environment variables
 
-- `PORT`
-- `APP_ORIGIN`
-- `OPENAI_API_KEY`
-- `OPENAI_MODEL`
-- `JWT_SECRET`
-- `MARIADB_HOST`
-- `MARIADB_PORT`
-- `MARIADB_DATABASE`
-- `MARIADB_USER`
-- `MARIADB_PASSWORD`
+Add these under **Project Settings → Environment Variables**:
 
-## Security Notes
+```text
+NODE_ENV=production
+OPENAI_API_KEY=your-openai-key
+OPENAI_MODEL=gpt-4.1
+JWT_SECRET=long-random-secret-at-least-32-characters
+MARIADB_HOST=your-managed-mariadb-host
+MARIADB_PORT=3306
+MARIADB_DATABASE=ai_interview
+MARIADB_USER=ai_interview_app
+MARIADB_PASSWORD=your-database-password
+```
 
-The project intentionally keeps secrets in environment variables. The Git ignore rules exclude `.env`, logs, dependency folders, coverage output, local databases, and macOS metadata.
+After the first deployment, you can optionally set:
 
-For production, use HTTPS, a strong randomly generated JWT secret, restricted CORS origin, secure cookies, managed database credentials, and server-side secret management.
+```text
+APP_ORIGIN=https://your-project.vercel.app
+```
+
+Same-origin browser requests work without setting `APP_ORIGIN`; set it when you use a separate frontend/API origin.
+
+### 3. Database
+
+Vercel does not provide the MariaDB server for this application. Use an externally managed MariaDB/MySQL-compatible database that is reachable from Vercel, then execute `database/schema.sql` once.
+
+### 4. Verify deployment
+
+Open:
+
+```text
+https://your-project.vercel.app/api/health
+```
+
+Expected response:
+
+```json
+{"ok":true,"service":"ai-mock-interview-platform"}
+```
+
+Vercel Functions support configurable execution duration; this project sets the API function to 120 seconds for AI/database work. citeturn1search0
+
+## Important production notes
+
+- Do not commit `.env` or API keys.
+- Use a strong random `JWT_SECRET`.
+- Use HTTPS in production; Vercel provides HTTPS automatically.
+- Browser microphone/camera permissions require a secure context.
+- Resume uploads are held in memory and are limited to 4 MB to stay conservative for serverless request handling.
+- The PDF report is generated dynamically; no persistent local filesystem is required.
+- AI interview scores are practice guidance, not hiring decisions.
 
 ## Validation
 
-Run the repository's syntax check before deployment:
-
 ```bash
 npm run check
 ```
 
-## Disclaimer
+The GitHub Actions workflow also validates the application with Node.js 24.
 
-This project is an educational and portfolio application. AI interview scores are guidance rather than a substitute for professional hiring decisions.
+## API
+
+See `docs/API.md` for the endpoint reference.
