@@ -12,5 +12,6 @@ export default z.object({
   MARIADB_PORT: z.coerce.number().default(3306),
   MARIADB_DATABASE: z.string().min(1),
   MARIADB_USER: z.string().min(1),
-  MARIADB_PASSWORD: z.string()
+  MARIADB_PASSWORD: z.string(),
+  MARIADB_SSL_CA: z.string().min(1).optional()
 }).parse(process.env);
