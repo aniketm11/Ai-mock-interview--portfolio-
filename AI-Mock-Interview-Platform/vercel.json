@@ -4,5 +4,11 @@
     "api/index.js": {
       "maxDuration": 120
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/frontend/:path*",
+      "destination": "/api/frontend/:path*"
+    }
+  ]
 }
