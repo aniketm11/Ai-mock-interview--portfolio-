@@ -1,0 +1,1 @@
+Aiven MySQL requires SSL. The application database pool is configured in database/mariadb.js.
