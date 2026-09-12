@@ -17,6 +17,7 @@ import { writeReport } from '../services/report-service.js';
 
 const app = express();
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const publicRoot = path.join(root, 'public');
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 4 * 1024 * 1024 } });
 
 const credentials = z.object({
@@ -161,10 +162,10 @@ app.get('/api/interviews/:id/report.pdf', authenticate, async (req, res, next) =
   }
 });
 
-app.use(express.static(path.join(root, 'public')));
-app.use('/frontend', express.static(path.join(root, 'frontend')));
-app.use('/api/frontend', express.static(path.join(root, 'frontend')));
-app.get('*', (_req, res) => res.sendFile(path.join(root, 'public', 'index.html')));
+app.use(express.static(publicRoot));
+app.use('/frontend', express.static(path.join(publicRoot, 'frontend')));
+app.use('/api/frontend', express.static(path.join(publicRoot, 'frontend')));
+app.get('*', (_req, res) => res.sendFile(path.join(publicRoot, 'index.html')));
 app.use(errorHandler);
 
 export default app;
