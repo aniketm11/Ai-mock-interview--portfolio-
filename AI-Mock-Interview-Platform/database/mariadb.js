@@ -1,6 +1,10 @@
 import mariadb from 'mariadb';
 import env from '../config/env.js';
 
+const ssl = env.MARIADB_SSL_CA
+  ? { ca: env.MARIADB_SSL_CA, rejectUnauthorized: true }
+  : true;
+
 const pool = mariadb.createPool({
   host: env.MARIADB_HOST,
   port: env.MARIADB_PORT,
@@ -11,9 +15,7 @@ const pool = mariadb.createPool({
   acquireTimeout: 10000,
   idleTimeout: 60,
   insertIdAsNumber: false,
-  ssl: {
-    rejectUnauthorized: true
-  }
+  ssl
 });
 
 export default pool;
