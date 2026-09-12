@@ -29,6 +29,12 @@ export function normalizeDomain(value = '') {
   return null;
 }
 
+export function inferDomain(profile = {}) {
+  const explicit = normalizeDomain(profile.domain);
+  if (explicit) return explicit;
+  return normalizeDomain([profile.role, profile.skills, profile.jobDescription].filter(Boolean).join(' '));
+}
+
 export function domainRules(domain) {
   return DOMAIN_RULES[domain] || null;
 }
