@@ -12,10 +12,15 @@ const hideAuth = () => { $('auth-overlay').hidden = true; };
 
 async function api(path, options = {}) {
   const headers = options.body instanceof FormData ? {} : { 'Content-Type': 'application/json', ...(options.headers || {}) };
-  const response = await fetch('/api' + path, { credentials: 'include', headers, ...options });
+  let response;
+  try {
+    response = await fetch('/api' + path, { credentials: 'include', headers, ...options });
+  } catch {
+    throw new Error('Cannot reach the API. Check the Vercel deployment and try again.');
+  }
   if (!response.ok) {
-    let message = 'Request failed';
-    try { const data = await response.json(); message = data.error || message; } catch {}
+    let message = `Request failed (${response.status})`;
+    try { const data = await response.json(); message = data.error || data.message || message; } catch {}
     throw new Error(message);
   }
   return response.status === 204 ? null : response.json();
