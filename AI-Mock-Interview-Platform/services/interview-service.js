@@ -1,10 +1,21 @@
 import { generateQuestions, evaluate } from '../ai/openai-interview-engine.js';
+import { inferDomain, validateQuestionDomain } from '../ai/domain-guard.js';
 import { interviews } from '../models/repositories.js';
 
 export async function startInterview(userId, profile) {
-  const plan = await generateQuestions(profile);
-  const id = await interviews.create(userId, profile, plan.questions);
-  return { id, questions: plan.questions };
+  const domain = inferDomain(profile);
+  if (!domain) throw Object.assign(new Error('Unable to determine the interview domain from the role and job description'), { status: 400 });
+  const enrichedProfile = { ...profile, domain };
+  const plan = await generateQuestions(enrichedProfile);
+  const alignment = validateQuestionDomain(domain, plan.questions);
+  if (!alignment.ok) {
+    throw Object.assign(new Error(`AI generated a poorly aligned interview: ${alignment.reason}`), {
+      status: 502,
+      details: alignment
+    });
+  }
+  const id = await interviews.create(userId, enrichedProfile, plan.questions);
+  return { id, domain, questions: plan.questions };
 }
 
 export async function submitAnswer(interview, position, transcript, voiceMetrics) {
