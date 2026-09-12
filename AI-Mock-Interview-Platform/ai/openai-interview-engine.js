@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import env from '../config/env.js';
+import { domainRules } from './domain-guard.js';
 
 const openai = new OpenAI({
   apiKey: env.OPENAI_API_KEY,
@@ -74,15 +75,21 @@ async function structured(instructions, input, name, schema) {
   }
 }
 
-export const generateQuestions = profile => structured(
-  'You are a structured interview designer. Analyze the role, seniority, skills, job description and resume. Generate exactly six sequential, role-specific interview questions across technical, HR, problem solving and leadership as relevant. Never request protected characteristics or infer them.',
-  profile,
-  'interview_questions',
-  questionSchema
-);
+export const generateQuestions = profile => {
+  const rules = domainRules(profile.domain);
+  const domainContract = rules
+    ? `The candidate domain is ${profile.domain}. Treat this as a hard constraint. Stay inside this domain and the candidate's role, skills and job description. Use domain concepts such as ${rules.required.slice(0, 6).join(', ')}. Do not ask questions centered on unrelated domains such as ${rules.foreign.slice(0, 4).join(', ')}.`
+    : 'Infer the professional domain conservatively from the role, skills and job description. Do not introduce a different professional domain.';
+  return structured(
+    `You are a structured interview designer. Generate exactly six sequential, role-specific interview questions across technical, HR, problem solving and leadership only when relevant to the candidate's role. ${domainContract} Never request protected characteristics or infer them. Every question must be answerable using the supplied role context, skills, job description and resume. Do not substitute a generic software, marketing, finance or HR interview for a different candidate domain.`,
+    profile,
+    'interview_questions',
+    questionSchema
+  );
+};
 
 export const evaluate = payload => structured(
-  'You are a calibrated interview evaluator. Evaluate only the candidate answer and observable voice metrics against the provided question and role context. Do not use integrity signals as evidence of misconduct. Give direct, constructive feedback and one useful adaptive follow-up question.',
+  `You are a calibrated interview evaluator. Evaluate only the candidate answer and observable voice metrics against the provided question and role context. Preserve the candidate's professional domain; do not introduce unrelated technical or functional standards. Do not use integrity signals as evidence of misconduct. Give direct, constructive feedback and one useful adaptive follow-up question.`,
   payload,
   'interview_evaluation',
   evaluationSchema
