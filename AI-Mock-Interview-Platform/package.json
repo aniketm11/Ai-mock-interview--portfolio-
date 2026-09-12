@@ -1,19 +1,19 @@
 {
   "name": "ai-mock-interview-platform",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "type": "module",
   "engines": { "node": "24.x" },
   "scripts": {
     "dev": "node --watch backend/server.js",
     "start": "node backend/server.js",
-    "check": "node --check backend/server.js && node --check backend/app.js && node --check api/index.js && node --check ai/openai-interview-engine.js && node --check frontend/application.js",
-    "vercel-build": "npm run check"
+    "check": "node --check backend/server.js && node --check backend/app.js && node --check api/index.js && node --check ai/openai-interview-engine.js && node --check frontend/application.js && node --check public/frontend/application.js && node --check services/interview-service.js && node --check models/repositories.js && node --check middleware/security.js",
+    "test": "node --test test/smoke.test.js",
+    "vercel-build": "npm run check && npm test"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.7",
-    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.0",
