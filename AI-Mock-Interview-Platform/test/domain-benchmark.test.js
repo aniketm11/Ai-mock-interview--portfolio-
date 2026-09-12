@@ -28,14 +28,16 @@ function personas() {
     for (let roleIndex = 0; roleIndex < fixture.roles.length; roleIndex += 1) {
       for (let skillIndex = 0; skillIndex < fixture.skills.length; skillIndex += 1) {
         for (const level of ['junior', 'mid', 'senior', 'lead', 'principal']) {
-          result.push({
-            id: `P-${String(id++).padStart(4, '0')}`,
-            domain,
-            role: fixture.roles[roleIndex],
-            level: level === 'lead' || level === 'principal' ? 'senior' : level,
-            skills: fixture.skills[skillIndex],
-            jobDescription: `Own ${domain.replace('_', ' ')} outcomes for a ${level} candidate. Collaborate cross-functionally, solve role-specific problems, communicate decisions clearly, and improve measurable business results.`
-          });
+          for (const context of ['startup', 'enterprise']) {
+            result.push({
+              id: `P-${String(id++).padStart(4, '0')}`,
+              domain,
+              role: fixture.roles[roleIndex],
+              level: level === 'lead' || level === 'principal' ? 'senior' : level,
+              skills: fixture.skills[skillIndex],
+              jobDescription: `Own ${domain.replace('_', ' ')} outcomes for a ${level} candidate in a ${context} environment. Collaborate cross-functionally, solve role-specific problems, communicate decisions clearly, and improve measurable business results.`
+            });
+          }
         }
       }
     }
