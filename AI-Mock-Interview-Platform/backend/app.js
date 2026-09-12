@@ -45,6 +45,7 @@ app.get('/api/interviews/:id/report.pdf', authenticate, async (req, res, next) =
 
 app.use(express.static(path.join(root, 'public')));
 app.use('/frontend', express.static(path.join(root, 'frontend')));
+app.use('/api/frontend', express.static(path.join(root, 'frontend')));
 app.get('*', (_req, res) => res.sendFile(path.join(root, 'public', 'index.html')));
 app.use(errorHandler);
 
