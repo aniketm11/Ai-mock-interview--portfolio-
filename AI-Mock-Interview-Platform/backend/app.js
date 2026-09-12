@@ -26,6 +26,7 @@ const credentials = z.object({
 });
 const profile = z.object({
   role: z.string().trim().min(2).max(100),
+  domain: z.enum(['software_engineering', 'marketing', 'finance', 'hr']).optional(),
   level: z.enum(['junior', 'mid', 'senior']),
   skills: z.string().trim().max(600),
   jobDescription: z.string().trim().max(12000)
