@@ -8,3 +8,6 @@ coverage/
 *.sqlite
 *.sqlite3
 npm-debug.log*
+*.pem
+*.key
+*.crt
