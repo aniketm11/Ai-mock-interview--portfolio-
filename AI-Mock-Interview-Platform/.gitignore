@@ -1,13 +1,29 @@
+# Dependencies
 node_modules/
+
+# Environment secrets
 .env
 .env.*
 !.env.example
+
+# Logs
 *.log
+npm-debug.log*
+
+# OS/editor files
 .DS_Store
+.vscode/
+
+# Build and coverage output
+dist/
+build/
 coverage/
+
+# Local databases
 *.sqlite
 *.sqlite3
-npm-debug.log*
+
+# Certificates and private keys
 *.pem
 *.key
 *.crt
