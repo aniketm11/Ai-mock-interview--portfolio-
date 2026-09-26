@@ -1,101 +1,98 @@
-# 🎯 AI Mock Interview Platform
+# AI Mock Interview + AI Cloud Portfolio
 
-> A production-style, AI-powered mock interview platform built to help candidates practice realistic interviews, receive structured feedback, and track improvement.
+A modern AI/Cloud portfolio for Aniket Mulik with an OpenAI-powered mock interview application.
 
-<p align="center">
-  <strong>Role-specific interviews • Voice answers • AI evaluation • Integrity signals • PDF reports</strong>
-</p>
+## Portfolio
 
-## ✨ What this project does
-
-The platform simulates a real interview workflow. A candidate can create an account, configure an interview around a target role and experience level, answer questions using voice, receive AI-generated evaluation, review interview history, and download a professional report.
-
-### Core capabilities
-
-| Area | Capability |
-|---|---|
-| 🎤 Interview | AI-generated role-specific interview questions |
-| 🧠 Evaluation | Technical, communication, confidence and grammar scoring |
-| 🎙️ Voice | Browser speech/media APIs for voice-first answers |
-| 📹 Integrity | Camera/microphone status and interview event tracking |
-| 📄 Reporting | Downloadable PDF interview reports |
-| 🔐 Security | bcrypt password hashing, JWT authentication, HTTP-only cookies |
-| 📚 History | Review previous interviews and performance |
-| ☁️ Deployment | Vercel-ready serverless API |
-
-## 🏗️ Architecture
+The repository root now contains a simple multi-page portfolio:
 
 ```text
-┌──────────────────────────────┐
-│        Candidate Browser     │
-│  HTML / CSS / JS + Media API │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│      Vercel / Express API    │
-│       /api/* + Auth          │
-└───────────┬─────────┬────────┘
-            │         │
-            ▼         ▼
-      ┌──────────┐  ┌──────────────┐
-      │ OpenAI   │  │   MariaDB    │
-      │ AI Engine│  │ Persistence  │
-      └──────────┘  └──────────────┘
-            │
-            ▼
-      ┌──────────────┐
-      │ PDF Reports  │
-      └──────────────┘
+index.html
+about.html
+projects.html
+skills.html
+contact.html
+css/style.css
+js/script.js
+images/
+assets/
 ```
 
-## 🧰 Technology Stack
+Open `index.html` directly to preview the portfolio without Node.js. The portfolio pages do not require a database or API key.
 
-**Frontend:** Semantic HTML, CSS, browser Speech/Media APIs  
-**Backend:** Node.js 24, Express 4  
-**AI:** OpenAI Responses API  
-**Database:** MariaDB / MySQL-compatible service  
-**Authentication:** bcrypt + JWT HTTP-only cookies  
-**Security:** Helmet + rate limiting + validated configuration  
-**Deployment:** Vercel serverless function  
-**Testing:** Node.js test runner + domain benchmark checks  
+## AI Mock Interview
 
-## 📁 Project Structure
+The working interview application remains under `AI-Mock-Interview-Platform/` because OpenAI API calls, authentication, database persistence and secure server-side processing require a backend.
 
-```text
-Ai-mock-interview--portfolio-
-├── AI-Mock-Interview-Platform/
-│   ├── ai/                 # AI question + evaluation engine
-│   ├── api/                # Vercel serverless entrypoint
-│   ├── backend/            # Express application + local server
-│   ├── config/             # Environment validation
-│   ├── database/           # MariaDB connection + schema
-│   ├── docs/               # API documentation
-│   ├── frontend/           # Browser application styles/scripts
-│   ├── middleware/         # Authentication + security
-│   ├── models/             # Database repositories
-│   ├── public/             # Public landing page
-│   ├── services/           # Auth/interview/report services
-│   ├── utils/              # Resume parsing utilities
-│   ├── scripts/            # AI/domain benchmark scripts
-│   ├── test/               # Automated tests
-│   ├── .env.example
-│   ├── package.json
-│   └── vercel.json
-└── README.md
-```
+### Interview setup
 
-## 🚀 Run Locally
+Each candidate can enter their own:
 
-### Requirements
+- Full name
+- Email
+- Phone (optional)
+- LinkedIn (optional)
+- Location (optional)
+- Resume (optional)
+- Target role
+- Skills
+- Job description
+- Level: Beginner / Intermediate / Advanced / Expert
+
+### Live interview analysis
+
+The application can use the browser camera and microphone during the interview without saving the video recording.
+
+It tracks observable signals including:
+
+- Speech-to-text transcript
+- Word count
+- Speaking pace
+- Filler words
+- Hesitation signals
+- Face presence
+- Multiple-face events
+- Approximate gaze/attention signal
+- Looking-away events
+- Camera and microphone status
+- Browser vision expression signals
+
+The browser vision layer uses MediaPipe Face Landmarker when available and falls back to the browser FaceDetector where supported. Video is analyzed in memory and is not uploaded as a recording.
+
+> Vision results are approximate observable signals. They are not measurements of emotion, honesty, competence, or hiring suitability.
+
+### AI evaluation
+
+OpenAI generates role-specific questions and evaluates spoken answers. Reports include:
+
+- Overall score
+- Technical score
+- Communication score
+- Grammar score
+- Vocabulary
+- Confidence
+- Word count
+- Speaking pace
+- Filler words
+- Hesitations
+- Face presence
+- Gaze attention estimate
+- Looking-away events
+- Multiple-face events
+- Strengths
+- Weaknesses
+- Improvement suggestions
+- Follow-up question
+
+## Run the interview application
+
+Requirements:
 
 - Node.js 24.x
 - npm 10+
-- MariaDB 10.6+ or compatible managed MySQL/MariaDB service
+- MariaDB/MySQL-compatible database
 - OpenAI API key
-- Chrome or Edge for speech and media features
-
-### Setup
+- Chrome or Edge recommended for browser media and speech features
 
 ```bash
 git clone https://github.com/aniketm11/Ai-mock-interview--portfolio-.git
@@ -104,87 +101,21 @@ npm install
 cp .env.example .env
 ```
 
-Create the database and run the schema from `database/schema.sql`, then configure `.env`.
-
-Start the application:
+Configure `.env`, create the `ai_interview` database, execute `database/schema.sql`, then:
 
 ```bash
 npm run dev
 ```
 
-Open:
+Open `http://localhost:3000`.
 
-```text
-http://localhost:3000
-```
+## Security
 
-### Validate the project
+Never commit `.env`, OpenAI keys or database passwords. HTTPS is recommended/required by browsers for camera and microphone access on deployed domains.
 
-```bash
-npm run check
-npm test
-```
-
-## ☁️ Deploy to Vercel
-
-The application is designed for Vercel with the **`AI-Mock-Interview-Platform`** directory as the project root.
-
-### Required environment variables
-
-```text
-NODE_ENV=production
-OPENAI_API_KEY=your-openai-key
-OPENAI_MODEL=gpt-4.1
-JWT_SECRET=your-long-random-secret
-MARIADB_HOST=your-managed-db-host
-MARIADB_PORT=3306
-MARIADB_DATABASE=ai_interview
-MARIADB_USER=ai_interview_app
-MARIADB_PASSWORD=your-database-password
-```
-
-Optional:
-
-```text
-APP_ORIGIN=https://your-project.vercel.app
-```
-
-After deployment, verify the API health endpoint:
-
-```text
-https://your-project.vercel.app/api/health
-```
-
-Expected response:
-
-```json
-{"ok":true,"service":"ai-mock-interview-platform"}
-```
-
-> **Note:** Vercel hosts the application/API, but the MariaDB server must be provided by an externally managed database service that is reachable from Vercel.
-
-## 🔐 Security & Production Notes
-
-- Never commit `.env` files or API keys.
-- Use a strong random `JWT_SECRET` in production.
-- HTTPS is required for browser microphone/camera access.
-- Resume uploads are limited and processed in memory.
-- Reports are generated dynamically without requiring a persistent local filesystem.
-- AI scores are practice guidance and should not be treated as hiring decisions.
-
-## 📌 Why I Built It
-
-This project combines cloud deployment, backend development, database design, authentication, AI integration, browser media APIs, automated testing, and production-oriented security into one end-to-end application.
-
-It is intended as both a practical interview-practice tool and a portfolio project demonstrating full-stack and cloud engineering skills.
-
-## 👨‍💻 Author
+## Author
 
 **Aniket Mulik**  
-Cloud & Full-Stack Developer
+AI & Cloud Engineering Portfolio
 
-GitHub: [@aniketm11](https://github.com/aniketm11)
-
----
-
-⭐ If this project is useful, consider giving the repository a star.
+GitHub: https://github.com/aniketm11
