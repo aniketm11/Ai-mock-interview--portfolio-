@@ -1,121 +1,136 @@
-# AI Mock Interview + AI Cloud Portfolio
+# AI Mock Interview Platform
 
-A modern AI/Cloud portfolio for Aniket Mulik with an OpenAI-powered mock interview application.
+A full-stack AI Mock Interview project for realistic interview practice. It is **not a personal portfolio**.
 
-## Portfolio
+## What the project does
 
-The repository root now contains a simple multi-page portfolio:
+- AI-generated role-specific interview questions
+- Beginner / Intermediate / Advanced / Expert levels
+- Candidate setup: name, email, optional phone, LinkedIn, location and resume
+- Target role, skills and job-description context
+- Browser speech-to-text for spoken answers
+- Word count, speaking pace, filler words and hesitation signals
+- Camera + microphone during the session
+- Browser vision signals: face presence, multiple faces, approximate gaze attention, looking-away events and selected visible expression signals
+- Video is analyzed during the session and is **not saved as an interview recording**
+- OpenAI answer evaluation
+- Technical, HR, communication, grammar, vocabulary, confidence, relevance, completeness, depth and problem-solving scores
+- Strengths, weaknesses, suggestions and adaptive follow-up questions
+- Interview history
+- Downloadable PDF report
+- Authentication and MariaDB persistence
+
+## Project structure
 
 ```text
-index.html
-about.html
-projects.html
-skills.html
-contact.html
-css/style.css
-js/script.js
-images/
-assets/
+Ai-mock-interview--portfolio-
+├── index.html                         # Project overview page
+├── css/
+│   └── style.css                     # Overview page styles
+├── images/
+├── assets/
+│
+└── AI-Mock-Interview-Platform/
+    ├── ai/                            # OpenAI question/evaluation engine
+    ├── api/                           # Vercel API entrypoint
+    ├── backend/                       # Express application
+    ├── config/                        # Environment validation
+    ├── database/                      # MariaDB schema/connection
+    ├── middleware/                    # Authentication/security
+    ├── models/                        # Database repositories
+    ├── public/
+    │   ├── index.html                 # Actual interview application
+    │   └── frontend/
+    │       ├── application.js
+    │       ├── media-monitor.js
+    │       ├── integrity-monitor.js
+    │       └── styles.css
+    ├── services/                      # Interview/auth/report services
+    ├── utils/                         # Resume parsing
+    ├── test/
+    ├── .env.example
+    ├── package.json
+    └── vercel.json
 ```
 
-Open `index.html` directly to preview the portfolio without Node.js. The portfolio pages do not require a database or API key.
+## Run the project correctly
 
-## AI Mock Interview
-
-The working interview application remains under `AI-Mock-Interview-Platform/` because OpenAI API calls, authentication, database persistence and secure server-side processing require a backend.
-
-### Interview setup
-
-Each candidate can enter their own:
-
-- Full name
-- Email
-- Phone (optional)
-- LinkedIn (optional)
-- Location (optional)
-- Resume (optional)
-- Target role
-- Skills
-- Job description
-- Level: Beginner / Intermediate / Advanced / Expert
-
-### Live interview analysis
-
-The application can use the browser camera and microphone during the interview without saving the video recording.
-
-It tracks observable signals including:
-
-- Speech-to-text transcript
-- Word count
-- Speaking pace
-- Filler words
-- Hesitation signals
-- Face presence
-- Multiple-face events
-- Approximate gaze/attention signal
-- Looking-away events
-- Camera and microphone status
-- Browser vision expression signals
-
-The browser vision layer uses MediaPipe Face Landmarker when available and falls back to the browser FaceDetector where supported. Video is analyzed in memory and is not uploaded as a recording.
-
-> Vision results are approximate observable signals. They are not measurements of emotion, honesty, competence, or hiring suitability.
-
-### AI evaluation
-
-OpenAI generates role-specific questions and evaluates spoken answers. Reports include:
-
-- Overall score
-- Technical score
-- Communication score
-- Grammar score
-- Vocabulary
-- Confidence
-- Word count
-- Speaking pace
-- Filler words
-- Hesitations
-- Face presence
-- Gaze attention estimate
-- Looking-away events
-- Multiple-face events
-- Strengths
-- Weaknesses
-- Improvement suggestions
-- Follow-up question
-
-## Run the interview application
-
-Requirements:
+### Requirements
 
 - Node.js 24.x
 - npm 10+
-- MariaDB/MySQL-compatible database
+- MariaDB 10.6+ or compatible MySQL/MariaDB service
 - OpenAI API key
-- Chrome or Edge recommended for browser media and speech features
+- Chrome or Edge for camera, microphone and speech features
+
+### 1. Clone
 
 ```bash
 git clone https://github.com/aniketm11/Ai-mock-interview--portfolio-.git
 cd Ai-mock-interview--portfolio-/AI-Mock-Interview-Platform
+```
+
+### 2. Install dependencies
+
+```bash
 npm install
+```
+
+### 3. Configure environment
+
+```bash
 cp .env.example .env
 ```
 
-Configure `.env`, create the `ai_interview` database, execute `database/schema.sql`, then:
+Set the OpenAI and MariaDB values in `.env`. Never commit `.env`.
+
+### 4. Create the database
+
+Create the database configured in `.env` and run:
+
+```text
+database/schema.sql
+```
+
+### 5. Start the application
 
 ```bash
 npm run dev
 ```
 
-Open `http://localhost:3000`.
+Open:
 
-## Security
+```text
+http://localhost:3000
+```
 
-Never commit `.env`, OpenAI keys or database passwords. HTTPS is recommended/required by browsers for camera and microphone access on deployed domains.
+### Health checks
+
+```text
+http://localhost:3000/api/health
+http://localhost:3000/api/health/db
+```
+
+## Important: Live Server vs the real application
+
+Opening the root `index.html` with VS Code Live Server only shows the **project overview**. It does not provide the backend, OpenAI API or database.
+
+For the actual AI interview, use the Express application with `npm run dev` and open `http://localhost:3000`.
+
+The OpenAI key stays on the server. Do **not** put it in browser JavaScript.
+
+## Interview analysis
+
+The camera stream is used while the interview is running. The application does not save the interview video as a recording.
+
+Vision values are observable estimates. They should not be interpreted as reliable measurements of a candidate's emotions, honesty, intelligence, competence or hiring suitability.
+
+## Deployment
+
+The backend is structured for Vercel, with an externally managed MariaDB/MySQL-compatible database. HTTPS is required for production camera/microphone access.
 
 ## Author
 
-**Aniket Mulik**  
-AI & Cloud Engineering Portfolio
+Project: **AI Mock Interview Platform**
 
-GitHub: https://github.com/aniketm11
+Repository: https://github.com/aniketm11/Ai-mock-interview--portfolio-
